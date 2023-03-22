@@ -1,7 +1,10 @@
 package ru.yandex.practicum.webinars.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.webinars.model.CreateGroup;
+import ru.yandex.practicum.webinars.model.UpdateGroup;
 import ru.yandex.practicum.webinars.model.User;
 
 import javax.validation.Valid;
@@ -19,7 +22,8 @@ public class UserController {
     private int idGenerator = 2;
 
     @PostMapping()
-    public User register(@RequestBody @Valid User user) {
+    //public User register(@RequestBody @Valid User user) {
+    public User register(@RequestBody @Validated(CreateGroup.class) User user) {
         if (users.values().stream().noneMatch(u ->u.getLogin().equals(user.getLogin()))) {
             user.setId(idGenerator++);
             users.put(user.getId(),user);
@@ -47,5 +51,15 @@ public class UserController {
     @GetMapping
     public List<User> getAllUsers() {
         return new ArrayList<>(users.values());
+    }
+    @PutMapping
+    public User updateUser(@RequestBody @Validated(UpdateGroup.class) User user) {
+        if (users.containsKey(user.getId())) {
+            users.put(user.getId(), user);
+            return user;
+        } else {
+            log.error("Пользователь с id = {} не найден", user.getId());
+            throw new RuntimeException("Пользователя с id = " + user.getId() + " не существует");
+        }
     }
 }
