@@ -28,6 +28,12 @@ public class UserController {
         }
     }
 
+    @DeleteMapping()
+    public void cleanUsers() {
+        users.clear();
+        log.info("Список пользователей очищен");
+    }
+
     @GetMapping
     public List<User> getAllUsers() {
         return users;
