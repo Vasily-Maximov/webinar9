@@ -1,5 +1,6 @@
 package ru.yandex.practicum.webinars.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 @Data
+@AllArgsConstructor
 public class User {
     @Null
     private Integer id;
