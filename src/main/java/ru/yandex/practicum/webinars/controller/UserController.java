@@ -12,8 +12,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final List<User> users = new ArrayList<>();
-    private int idGenerator = 1;
+    private final List<User> users = new ArrayList<>(List.of(new User(1,"Vasiliy","softservice-31@mail.ru",
+            "123456789")));
+    private int idGenerator = 2;
 
     @PostMapping()
     public User register(@RequestBody @Valid User user) {
