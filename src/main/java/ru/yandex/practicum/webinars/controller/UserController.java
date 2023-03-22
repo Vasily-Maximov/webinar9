@@ -20,7 +20,7 @@ public class UserController {
 
     @PostMapping()
     public User register(@RequestBody @Valid User user) {
-        if (! users.containsKey(user.getId())) {
+        if (users.values().stream().noneMatch(u ->u.getLogin().equals(user.getLogin()))) {
             user.setId(idGenerator++);
             users.put(user.getId(),user);
             log.error("Пользователь с логином {} добавлен", user.getLogin());
