@@ -6,21 +6,23 @@ import ru.yandex.practicum.webinars.model.User;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final List<User> users = new ArrayList<>(List.of(new User(1,"Vasiliy","softservice-31@mail.ru",
+    private final Map<Integer, User> users = new HashMap<>(Map.of(1,new User(1,"Vasiliy","kt-62a@mail.ru",
             "123456789")));
     private int idGenerator = 2;
 
     @PostMapping()
     public User register(@RequestBody @Valid User user) {
-        if (users.stream().noneMatch(u ->u.getLogin().equals(user.getLogin()))) {
+        if (users.values().stream().noneMatch(u ->u.getLogin().equals(user.getLogin()))) {
             user.setId(idGenerator++);
-            users.add(user);
+            users.put(user.getId(),user);
             log.error("Пользователь с логином {} добавлен", user.getLogin());
             return user;
         } else {
@@ -30,13 +32,20 @@ public class UserController {
     }
 
     @DeleteMapping()
-    public void cleanUsers() {
-        users.clear();
+    public List<User> cleanUsers() {
+        if (! users.containsKey(1)) {
+            users.clear();
+        } else {
+            User userAdmin = users.get(1);
+            users.clear();
+            users.put(1, userAdmin);
+        }
         log.info("Список пользователей очищен");
+        return new ArrayList<>(users.values());
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return users;
+        return new ArrayList<>(users.values());
     }
 }
